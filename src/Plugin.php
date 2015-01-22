@@ -70,7 +70,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     /**
      * Handle the main "php" command
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
      */
     public function handleCommand(Event $event, Queue $queue)
@@ -89,20 +89,13 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
 
         $function = $this->db->fetchAssoc('SELECT * FROM function f WHERE name = ?', array($functionName));
 
-        if (is_array($function) && count($function)) {
-            $this->sendIrcResponseLine($event, $queue, sprintf('%s ( %s )', $function['name'], $function['parameterString']));
-            if ($function['description']) {
-                $this->sendIrcResponseLine($event, $queue, $function['description']);
-            }
-        } else {
-            $this->sendIrcResponseLine($event, $queue, sprintf("The PHP function '%s' cannot be found", $functionName));
-        }
+        $this->doSuccessResponse($event, $queue, $function);
     }
 
     /**
      * Handle the help command
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
      */
     public function handleCommandHelp(Event $event, Queue $queue)
@@ -113,7 +106,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     /**
      * Handle errors
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
      */
     public function handleCommandError(Event $event, Queue $queue)
@@ -121,9 +114,45 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
         $this->sendIrcResponse($event, $queue, $this->getErrorLines());
     }
 
-    public function getSuccessLines()
+    /**
+     * Process the response from a successful DB query
+     *
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
+     * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
+     * @param array $function
+     */
+    public function doSuccessResponse(Event $event, Queue $queue, $function)
     {
-        //TODO: extract response generation from handleCommand() & update testHandleCommandSuccessfully()
+        if (is_array($function) && count($function)) {
+            $this->sendIrcResponse($event, $queue, $this->getFoundFunctionLines($function));
+        } else {
+            $this->sendIrcResponse($event, $queue, $this->getUnknownFunctionLines());
+        }
+    }
+
+    /**
+     * Return an array of sucessful, 'function found' lines
+     *
+     * @param array $function
+     * @return array
+     */
+    public function getFoundFunctionLines($function)
+    {
+        $response = array(sprintf('%s ( %s )', $function['name'], $function['parameterString']));
+        if ($function['description']) {
+            $response[] = $function['description'];
+        }
+        return $response;
+    }
+
+    /**
+     * Return an array of unsucessful, 'function not found' lines
+     *
+     * @return array
+     */
+    public function getUnknownFunctionLines()
+    {
+        return array("Function not found");
     }
 
     /**
@@ -154,7 +183,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     /**
      * Check the supplied parameters are valid
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @return bool
      */
     protected function validateParams(Event $event)
@@ -165,7 +194,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     /**
      * Send an array of response lines back to IRC
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
      * @param array $ircResponse
      */
@@ -180,7 +209,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     /**
      * Send a single response line back to IRC
      *
-     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEventInterface $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
      * @param string $ircResponseLine
      */
