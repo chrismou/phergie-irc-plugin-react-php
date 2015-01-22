@@ -67,7 +67,7 @@ class Plugin extends AbstractPlugin
     public function handleCommand(Event $event, Queue $queue)
     {
 
-        if (!$this->validateParams($event)) $this->handleCommandHelp($event, $queue);
+        if (!$this->validateParams($event) || !$this->db) $this->handleCommandHelp($event, $queue);
 
         $functionName = $event->getCustomParams()[0];
 
