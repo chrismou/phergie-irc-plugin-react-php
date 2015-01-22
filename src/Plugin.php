@@ -90,9 +90,10 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
         $function = $this->db->fetchAssoc('SELECT * FROM function f WHERE name = ?', array($functionName));
 
         if (is_array($function) && count($function)) {
-            //$this->sendIrcResponseLine($event, $queue, sprintf('%s %s ( %s )', $function['type'], $function['name'], $function['parameterString']));
             $this->sendIrcResponseLine($event, $queue, sprintf('%s ( %s )', $function['name'], $function['parameterString']));
-            if ($function['description']) $this->sendIrcResponseLine($event, $queue, $function['description']);
+            if ($function['description']) {
+                $this->sendIrcResponseLine($event, $queue, $function['description']);
+            }
         } else {
             $this->sendIrcResponseLine($event, $queue, sprintf("The PHP function '%s' cannot be found", $functionName));
         }
@@ -110,7 +111,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     }
 
     /**
-     * Handle the help command
+     * Handle errors
      *
      * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
      * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
@@ -118,6 +119,11 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     public function handleCommandError(Event $event, Queue $queue)
     {
         $this->sendIrcResponse($event, $queue, $this->getErrorLines());
+    }
+
+    public function getSuccessLines()
+    {
+        //TODO: extract response generation from handleCommand() & update testHandleCommandSuccessfully()
     }
 
     /**
@@ -135,6 +141,11 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
         );
     }
 
+    /**
+     * Return a=n array of error response lines
+     *
+     * @return array
+     */
     public function getErrorLines()
     {
         return array('Something went wrong... ಠ_ಠ');
@@ -146,7 +157,8 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
      * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
      * @return bool
      */
-    protected function validateParams(Event $event) {
+    protected function validateParams(Event $event)
+    {
         return (count($event->getCustomParams())>0) ? true : false;
     }
 

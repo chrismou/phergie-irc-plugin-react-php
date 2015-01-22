@@ -2,7 +2,9 @@
 
 [Phergie](https://github.com/phergie/phergie-irc-bot-react/) plugin for PHP function lookups.
 
-[![Build Status](https://secure.travis-ci.org/chrismou/phergie-irc-plugin-react-php.png?branch=master)](http://travis-ci.org/chrismou/phergie-irc-plugin-react-php)
+[![Build Status](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/badges/build.png?b=master)](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/build-status/master)
+[![Code Coverage](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/?branch=master)
 
 ## Install
 

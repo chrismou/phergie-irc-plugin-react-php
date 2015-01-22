@@ -26,12 +26,12 @@ use \Mockery as m;
 class PluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Phergie\Irc\Plugin\React\Command\CommandEvent
+     * @var \Mockery\MockInterface
      */
     private $eventMock;
 
     /**
-     * @var \Phergie\Irc\Bot\React\EventQueueInterface
+     * @var \Mockery\MockInterface
      */
     private $queueMock;
 
@@ -72,54 +72,35 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $plugin->getSubscribedEvents());
     }
 
-    public function testHandleCommandSuccessfully()
+    /**
+     * Test the process of searching for a valid, known function
+     */
+    public function testHandleCommandWithFunctionFound()
     {
         $testParam = 'array_key_exists';
 
         $this->prepareMocksForParamValidation(array($testParam));
-
-        $this->eventMock->shouldReceive('getSource')
-            ->andReturn('#channel')
-            ->twice();
-
-        $this->eventMock->shouldReceive('getCustomCommand')
-            ->andReturn("php");
-
-        $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array($testParam))
-            ->once();
-
-        $this->queueMock->shouldReceive('ircPrivmsg')
-            ->twice();
-        //->withArgs(array('#channel', 'wut'));
+        $this->prepareMocksForPostDbQueryResponse($testParam, 2, 2);
 
         $this->plugin->handleCommand($this->eventMock, $this->queueMock);
     }
 
+    /**
+     * Test the process of searching for an invalid (ie, not in the DB) function
+     */
     public function testHandleCommandWithUnknownFunction()
     {
         $testParam = 'woozlewozzle';
 
         $this->prepareMocksForParamValidation(array($testParam));
-
-        $this->eventMock->shouldReceive('getSource')
-            ->andReturn('#channel')
-            ->once();
-
-        $this->eventMock->shouldReceive('getCustomCommand')
-            ->andReturn("php");
-
-        $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array($testParam))
-            ->once();
-
-        $this->queueMock->shouldReceive('ircPrivmsg')
-            ->once();
-        //->withArgs(array('#channel', 'wut'));
+        $this->prepareMocksForPostDbQueryResponse($testParam, 1, 1);
 
         $this->plugin->handleCommand($this->eventMock, $this->queueMock);
     }
 
+    /**
+     * Test the process of attempting to use an unreachable DB
+     */
     public function testHandleCommandWithInvalidDb()
     {
         $plugin = new Plugin(array('dbpath' => 'on/the/road/to/nowhere'));
@@ -128,6 +109,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $plugin->handleCommand($this->eventMock, $this->queueMock);
     }
 
+    /**
+     * Test the process of attempting to search with an invalid number of parameters
+     */
     public function testHandleCommandWithInvalidParams()
     {
         $this->prepareMocksForParamValidation(array());
@@ -135,13 +119,46 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->plugin->handleCommand($this->eventMock, $this->queueMock);
     }
 
+    /**
+     * Test the process of requesting the "help" response
+     */
     public function testHandleCommandHelp()
     {
         $this->prepareMocksForGenericResponse($this->plugin->getHelpLines());
         $this->plugin->handleCommandHelp($this->eventMock, $this->queueMock);
     }
 
-    protected function prepareMocksForGenericResponse($expectedLines)
+    /**
+     * Prepare the mocks necessary for a process involving a successful DB query
+     *
+     * @param string $testParam
+     * @param integer $getSourceNum
+     * @param integer $ircPrivMsgNum
+     */
+    protected function prepareMocksForPostDbQueryResponse($testParam, $getSourceNum, $ircPrivMsgNum)
+    {
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn('#channel')
+            ->times($getSourceNum);
+
+        $this->eventMock->shouldReceive('getCustomCommand')
+            ->andReturn("php");
+
+        $this->eventMock->shouldReceive('getCustomParams')
+            ->andReturn(array($testParam))
+            ->once();
+
+        $this->queueMock->shouldReceive('ircPrivmsg')
+            ->times($ircPrivMsgNum);
+        //->withArgs(array('#channel', 'wut'));
+    }
+
+    /**
+     * Prepare the mocks necessary for a process requiring a hard coded response
+     *
+     * @param array $expectedLines
+     */
+    protected function prepareMocksForGenericResponse(array $expectedLines)
     {
         $this->eventMock->shouldReceive('getSource')
             ->andReturn('#channel')
@@ -154,6 +171,11 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Prepare the mocks necessary for a process requiring a param validation
+     *
+     * @param array $customParamArray
+     */
     protected function prepareMocksForParamValidation($customParamArray = array())
     {
         $this->eventMock->shouldReceive('getCustomParams')
@@ -164,11 +186,11 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     /**
      * Returns a mock command event.
      *
-     * @return \Phergie\Irc\Plugin\React\Command\CommandEvent
+     * @return \Phergie\Irc\Plugin\React\Command\CommandEventInterface
      */
     protected function getMockEvent()
     {
-        return m::mock('\Phergie\Irc\Plugin\React\Command\CommandEvent');
+        return m::mock('\Phergie\Irc\Plugin\React\Command\CommandEventInterface');
     }
 
     /**
