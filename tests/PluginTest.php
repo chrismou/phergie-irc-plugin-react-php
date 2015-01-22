@@ -72,8 +72,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $plugin->getSubscribedEvents());
     }
 
-    /*public function testHandleCommand()
+    public function testHandleCommandSuccessfully()
     {
+        $testParam = 'array_key_exists';
+
+        $this->prepareMocksForParamValidation(array($testParam));
+
         $this->eventMock->shouldReceive('getSource')
             ->andReturn('#channel')
             ->twice();
@@ -82,20 +86,63 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             ->andReturn("php");
 
         $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array("array_key_exists"))
-            ->twice();
+            ->andReturn(array($testParam))
+            ->once();
 
         $this->queueMock->shouldReceive('ircPrivmsg')
-            ->twice()
-            ->withArgs(array('#channel', 'wut'));
+            ->twice();
+        //->withArgs(array('#channel', 'wut'));
 
         $this->plugin->handleCommand($this->eventMock, $this->queueMock);
-    }*/
+    }
+
+    public function testHandleCommandWithUnknownFunction()
+    {
+        $testParam = 'woozlewozzle';
+
+        $this->prepareMocksForParamValidation(array($testParam));
+
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn('#channel')
+            ->once();
+
+        $this->eventMock->shouldReceive('getCustomCommand')
+            ->andReturn("php");
+
+        $this->eventMock->shouldReceive('getCustomParams')
+            ->andReturn(array($testParam))
+            ->once();
+
+        $this->queueMock->shouldReceive('ircPrivmsg')
+            ->once();
+        //->withArgs(array('#channel', 'wut'));
+
+        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
+    }
+
+    public function testHandleCommandWithInvalidDb()
+    {
+        $plugin = new Plugin(array('dbpath' => 'on/the/road/to/nowhere'));
+
+        $this->prepareMocksForGenericResponse($this->plugin->getErrorLines());
+        $plugin->handleCommand($this->eventMock, $this->queueMock);
+    }
+
+    public function testHandleCommandWithInvalidParams()
+    {
+        $this->prepareMocksForParamValidation(array());
+        $this->prepareMocksForGenericResponse($this->plugin->getHelpLines());
+        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
+    }
 
     public function testHandleCommandHelp()
     {
-        $expectedLines = $this->plugin->getHelpLines();
+        $this->prepareMocksForGenericResponse($this->plugin->getHelpLines());
+        $this->plugin->handleCommandHelp($this->eventMock, $this->queueMock);
+    }
 
+    protected function prepareMocksForGenericResponse($expectedLines)
+    {
         $this->eventMock->shouldReceive('getSource')
             ->andReturn('#channel')
             ->times(count($expectedLines));
@@ -105,31 +152,14 @@ class PluginTest extends \PHPUnit_Framework_TestCase
                 ->once()
                 ->withArgs(array('#channel', $expectedLine));
         }
-
-        $this->plugin->handleCommandHelp($this->eventMock, $this->queueMock);
     }
 
-    /*public function testValidateParamsWithValidArray()
+    protected function prepareMocksForParamValidation($customParamArray = array())
     {
         $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array('array_key_exists'))
+            ->andReturn($customParamArray)
             ->once();
-
-        $validParams = $this->plugin->validateParams($this->eventMock);
-
-        expect($validParams)->toBeTrue();
-    }*/
-
-    /*public function testValidateParamsWithInvalidArray()
-    {
-        $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array())
-            ->once();
-
-        $validParams = $this->plugin->validateParams($this->eventMock);
-
-        expect($validParams)->toBeFalse();
-    }*/
+    }
 
     /**
      * Returns a mock command event.

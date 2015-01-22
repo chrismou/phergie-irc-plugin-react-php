@@ -15,6 +15,7 @@ use Phergie\Irc\Bot\React\EventQueueInterface as Queue;
 use Phergie\Irc\Plugin\React\Command\CommandEvent as Event;
 
 use Doctrine\DBAL\DriverManager;
+use Psr\Log\LoggerAwareInterface;
 
 /**
  * Plugin class.
@@ -22,7 +23,7 @@ use Doctrine\DBAL\DriverManager;
  * @category Chrismou
  * @package Chrismou\Phergie\Plugin\Php
  */
-class Plugin extends AbstractPlugin
+class Plugin extends AbstractPlugin implements LoggerAwareInterface
 {
     protected $db;
     /**
@@ -41,7 +42,15 @@ class Plugin extends AbstractPlugin
                 'driver' => 'pdo_sqlite',
                 'path' => $config['dbpath']
             );
-            $this->db = DriverManager::getConnection($connectionParams, new \Doctrine\DBAL\Configuration());
+            try {
+                // Load the DB and attempt a connection to ensure it's valids
+                $this->db = DriverManager::getConnection($connectionParams, new \Doctrine\DBAL\Configuration());
+                $this->db->connect();
+            } catch (\PDOException $e) {
+                // Handle failed connections - most likely the supplied config path was wrong
+                $this->db = null;
+                //$this->logger->debug('[PHP Plugin] ' . $e->getMessage());
+            }
         }
     }
 
@@ -66,8 +75,15 @@ class Plugin extends AbstractPlugin
      */
     public function handleCommand(Event $event, Queue $queue)
     {
+        if (!$this->db) {
+            $this->handleCommandError($event, $queue);
+            return;
+        }
 
-        if (!$this->validateParams($event) || !$this->db) $this->handleCommandHelp($event, $queue);
+        if (!$this->validateParams($event)) {
+            $this->handleCommandHelp($event, $queue);
+            return;
+        }
 
         $functionName = $event->getCustomParams()[0];
 
@@ -94,6 +110,17 @@ class Plugin extends AbstractPlugin
     }
 
     /**
+     * Handle the help command
+     *
+     * @param \Phergie\Irc\Plugin\React\Command\CommandEvent $event
+     * @param \Phergie\Irc\Bot\React\EventQueueInterface $queue
+     */
+    public function handleCommandError(Event $event, Queue $queue)
+    {
+        $this->sendIrcResponse($event, $queue, $this->getErrorLines());
+    }
+
+    /**
      * Return an array of help command response lines
      *
      * @return array
@@ -108,6 +135,11 @@ class Plugin extends AbstractPlugin
         );
     }
 
+    public function getErrorLines()
+    {
+        return array('Something went wrong... ಠ_ಠ');
+    }
+
     /**
      * Check the supplied parameters are valid
      *
@@ -115,7 +147,7 @@ class Plugin extends AbstractPlugin
      * @return bool
      */
     protected function validateParams(Event $event) {
-        return (count($event->getCustomParams()>0)) ? true : false;
+        return (count($event->getCustomParams())>0) ? true : false;
     }
 
     /**
