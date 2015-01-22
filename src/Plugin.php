@@ -12,7 +12,7 @@ namespace Chrismou\Phergie\Plugin\Php;
 
 use Phergie\Irc\Bot\React\AbstractPlugin;
 use Phergie\Irc\Bot\React\EventQueueInterface as Queue;
-use Phergie\Irc\Plugin\React\Command\CommandEvent as Event;
+use Phergie\Irc\Plugin\React\Command\CommandEventInterface as Event;
 
 use Doctrine\DBAL\DriverManager;
 use Psr\Log\LoggerAwareInterface;
