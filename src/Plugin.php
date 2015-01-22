@@ -130,7 +130,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
         return array(
             'Usage: php [function] [full]',
             '[function] - the PHP function you want to search for',
-            '[full] (optional) - add "full" after the function name to include the description',
+            //'[full] (optional) - add "full" after the function name to include the description',
             'Returns information about the specified PHP function'
         );
     }
