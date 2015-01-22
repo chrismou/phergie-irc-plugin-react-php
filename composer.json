@@ -17,7 +17,7 @@
 
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.4",
+        "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "~0.9",
         "danrspencer/phpunit-expect-syntax": "dev-master",
         "phergie/phergie-irc-plugin-react-autojoin": "1.0.*",
