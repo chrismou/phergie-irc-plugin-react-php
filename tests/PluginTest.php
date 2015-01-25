@@ -47,7 +47,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->dbPath = __DIR__.'/../data/phpdoc.db';
+        $this->dbPath = __DIR__ . '/../data/phpdoc.db';
 
         $this->plugin = new Plugin(array('dbpath' => $this->dbPath));
         $this->eventMock = $this->getMockEvent();

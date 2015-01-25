@@ -26,6 +26,7 @@ use Psr\Log\LoggerAwareInterface;
 class Plugin extends AbstractPlugin implements LoggerAwareInterface
 {
     protected $db;
+
     /**
      * Accepts plugin configuration.
      *
@@ -62,8 +63,8 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     public function getSubscribedEvents()
     {
         return array(
-            'command.php'       => 'handleCommand',
-            'command.php.help'  => 'handleCommandHelp'
+            'command.php' => 'handleCommand',
+            'command.php.help' => 'handleCommandHelp'
         );
     }
 
@@ -188,7 +189,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
      */
     protected function validateParams(Event $event)
     {
-        return (count($event->getCustomParams())>0) ? true : false;
+        return (count($event->getCustomParams()) > 0) ? true : false;
     }
 
     /**
