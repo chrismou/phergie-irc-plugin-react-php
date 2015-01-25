@@ -55,15 +55,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Call closing methods
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        m::close();
-    }
-
-    /**
      * Tests that getSubscribedEvents() returns an array.
      */
     public function testGetSubscribedEvents()
