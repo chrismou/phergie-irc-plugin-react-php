@@ -47,7 +47,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
                 // Load the DB and attempt a connection to ensure it's valids
                 $this->db = DriverManager::getConnection($connectionParams, new \Doctrine\DBAL\Configuration());
                 $this->db->connect();
-            } catch (\PDOException $e) {
+            } catch (\Exception $e) {
                 // Handle failed connections - most likely the supplied config path was wrong
                 $this->db = null;
                 //$this->logger->debug('[PHP Plugin] ' . $e->getMessage());
