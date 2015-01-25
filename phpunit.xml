@@ -2,21 +2,15 @@
 
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnError="false"
          stopOnFailure="false"
-         strict="true"
          syntaxCheck="true"
-         verbose="true"
->
+         bootstrap="vendor/autoload.php"
+        >
     <testsuites>
         <testsuite name="chrismou/phergie-irc-plugin-react-php test suite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
