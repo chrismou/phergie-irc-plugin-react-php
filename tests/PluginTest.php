@@ -61,6 +61,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $plugin->getSubscribedEvents());
     }
 
+    /**
+     * Test the process of searching for a valid PHP function
+     */
     public function testHandleCommandWithFunctionFound()
     {
         $testParam = 'array_key_exists';
@@ -89,6 +92,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test the process of searching for a non-existent PHP function
+     */
     public function testHandleCommandWithUnknownFunction()
     {
         $testParam = 'woozlewozzle';
@@ -116,6 +122,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test the process of attempting to instantiate the plugin with a reference to an invalid DB
+     */
     public function testHandleCommandWithInvalidDb()
     {
         $plugin = $this->getPlugin('on/the/road/to/nowhere');
@@ -136,6 +145,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test the process of providing invalid parameters
+     */
     public function testHandleCommandWithInvalidParams()
     {
         $source = '#channel';
@@ -159,6 +171,9 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Test the help command
+     */
     public function testHandleCommandHelp()
     {
         $source = '#channel';
@@ -178,6 +193,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Return an instance of the PHP plugin
+     *
+     * @param bool|string $customDbPath
+     * @return \Chrismou\Phergie\Plugin\Php\Plugin
+     */
     protected function getPlugin($customDbPath=false)
     {
         $plugin = new Plugin(array('dbpath' => ($customDbPath) ? $customDbPath : $this->dbPath));

@@ -56,7 +56,7 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
     }
 
     /**
-     *
+     * Return an array of event subscriptions
      *
      * @return array
      */
@@ -91,6 +91,12 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
         $this->doSuccessResponse($event, $queue, $function);
     }
 
+    /**
+     * Perform a DB lookup on a provided PHP function name1
+     *
+     * @param string $functionName
+     * @return mixed
+     */
     public function doFunctionLookup($functionName)
     {
         return $this->db->fetchAssoc('SELECT * FROM function f WHERE name = ?', array($functionName));
