@@ -86,11 +86,14 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
             return;
         }
 
-        $functionName = $event->getCustomParams()[0];
-
-        $function = $this->db->fetchAssoc('SELECT * FROM function f WHERE name = ?', array($functionName));
+        $function = $this->doFunctionLookup($event->getCustomParams()[0]);
 
         $this->doSuccessResponse($event, $queue, $function);
+    }
+
+    public function doFunctionLookup($functionName)
+    {
+        return $this->db->fetchAssoc('SELECT * FROM function f WHERE name = ?', array($functionName));
     }
 
     /**

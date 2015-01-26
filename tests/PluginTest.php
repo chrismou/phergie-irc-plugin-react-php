@@ -49,7 +49,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         $this->dbPath = __DIR__ . '/../data/phpdoc.db';
 
-        $this->plugin = new Plugin(array('dbpath' => $this->dbPath));
+        $this->plugin = $this->getPlugin();
         $this->eventMock = $this->getMockEvent();
         $this->queueMock = $this->getMockQueue();
     }
@@ -59,119 +59,111 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSubscribedEvents()
     {
-        $plugin = new Plugin;
+        $plugin = $this->getPlugin();
         $this->assertInternalType('array', $plugin->getSubscribedEvents());
     }
 
-    /**
-     * Test the process of searching for a valid, known function
-     */
     public function testHandleCommandWithFunctionFound()
     {
         $testParam = 'array_key_exists';
+        $source = '#channel';
 
-        $this->prepareMocksForParamValidation(array($testParam));
-        $this->prepareMocksForPostDbQueryResponse($testParam, 2, 2);
-
-        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
-    }
-
-    /**
-     * Test the process of searching for an invalid (ie, not in the DB) function
-     */
-    public function testHandleCommandWithUnknownFunction()
-    {
-        $testParam = 'woozlewozzle';
-
-        $this->prepareMocksForParamValidation(array($testParam));
-        $this->prepareMocksForPostDbQueryResponse($testParam, 1, 1);
-
-        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
-    }
-
-    /**
-     * Test the process of attempting to use an unreachable DB
-     */
-    public function testHandleCommandWithInvalidDb()
-    {
-        $plugin = new Plugin(array('dbpath' => 'on/the/road/to/nowhere'));
-
-        $this->prepareMocksForGenericResponse($this->plugin->getErrorLines());
-        $plugin->handleCommand($this->eventMock, $this->queueMock);
-    }
-
-    /**
-     * Test the process of attempting to search with an invalid number of parameters
-     */
-    public function testHandleCommandWithInvalidParams()
-    {
-        $this->prepareMocksForParamValidation(array());
-        $this->prepareMocksForGenericResponse($this->plugin->getHelpLines());
-        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
-    }
-
-    /**
-     * Test the process of requesting the "help" response
-     */
-    public function testHandleCommandHelp()
-    {
-        $this->prepareMocksForGenericResponse($this->plugin->getHelpLines());
-        $this->plugin->handleCommandHelp($this->eventMock, $this->queueMock);
-    }
-
-    /**
-     * Prepare the mocks necessary for a process involving a successful DB query
-     *
-     * @param string $testParam
-     * @param integer $getSourceNum
-     * @param integer $ircPrivMsgNum
-     */
-    protected function prepareMocksForPostDbQueryResponse($testParam, $getSourceNum, $ircPrivMsgNum)
-    {
-        $this->eventMock->shouldReceive('getSource')
-            ->andReturn('#channel')
-            ->times($getSourceNum);
+        $this->eventMock->shouldReceive('getCustomParams')
+            ->andReturn(array($testParam))
+            ->twice();
 
         $this->eventMock->shouldReceive('getCustomCommand')
             ->andReturn("php");
 
-        $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn(array($testParam))
-            ->once();
+        $function = $this->plugin->doFunctionLookup($testParam);
+        $expectedLines = $this->plugin->getFoundFunctionLines($function);
 
-        $this->queueMock->shouldReceive('ircPrivmsg')
-            ->times($ircPrivMsgNum);
-        //->withArgs(array('#channel', 'wut'));
-    }
-
-    /**
-     * Prepare the mocks necessary for a process requiring a hard coded response
-     *
-     * @param array $expectedLines
-     */
-    protected function prepareMocksForGenericResponse(array $expectedLines)
-    {
         $this->eventMock->shouldReceive('getSource')
-            ->andReturn('#channel')
+            ->andReturn($source)
             ->times(count($expectedLines));
 
-        foreach ($expectedLines as $expectedLine) {
+        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
+
+        foreach ($expectedLines as $line) {
             $this->queueMock->shouldReceive('ircPrivmsg')
-                ->once()
-                ->withArgs(array('#channel', $expectedLine));
+                ->withArgs(array($source, $line));
         }
     }
 
-    /**
-     * Prepare the mocks necessary for a process requiring a param validation
-     *
-     * @param array $customParamArray
-     */
-    protected function prepareMocksForParamValidation($customParamArray = array())
+    public function testHandleCommandWithUnknownFunction()
     {
+        $testParam = 'woozlewozzle';
+        $source = '#channel';
+
         $this->eventMock->shouldReceive('getCustomParams')
-            ->andReturn($customParamArray)
-            ->once();
+            ->andReturn(array($testParam))
+            ->twice();
+
+        $this->eventMock->shouldReceive('getCustomCommand')
+            ->andReturn("php");
+
+        $expectedLines = $this->plugin->getUnknownFunctionLines();
+
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn($source)
+            ->times(count($expectedLines));
+
+        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
+
+        foreach ($expectedLines as $line) {
+            $this->queueMock->shouldReceive('ircPrivmsg')
+                ->withArgs(array($source, $line));
+        }
+    }
+
+    public function testHandleCommandWithInvalidDb()
+    {
+        $plugin = $this->getPlugin('on/the/road/to/nowhere');
+        $source = '#channel';
+
+        $expectedLines = $plugin->getErrorLines();
+
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn($source)
+            ->times(count($expectedLines));
+
+        $plugin->handleCommand($this->eventMock, $this->queueMock);
+
+        foreach ($expectedLines as $line) {
+            $this->queueMock->shouldReceive('ircPrivmsg')
+                ->withArgs(array($source, $line));
+        }
+    }
+
+    public function testHandleCommandWithInvalidParams()
+    {
+
+    }
+
+    public function testHandleCommandHelp()
+    {
+        $expectedLines = $this->plugin->getHelpLines();
+        $source = '#channel';
+
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn($source)
+            ->times(count($expectedLines));
+
+        $this->plugin->handleCommandHelp($this->eventMock, $this->queueMock);
+
+        foreach ($expectedLines as $expectedLine) {
+            $this->queueMock->shouldReceive('ircPrivmsg')
+                ->withArgs(array($source, $expectedLine));
+        }
+    }
+
+    protected function getPlugin($customDbPath=false)
+    {
+        $plugin = new Plugin(array('dbpath' => ($customDbPath) ? $customDbPath : $this->dbPath));
+        $plugin->setEventEmitter(m::mock('\Evenement\EventEmitterInterface'));
+        $plugin->setLogger(m::mock('\Psr\Log\LoggerInterface'));
+
+        return $plugin;
     }
 
     /**
@@ -181,7 +173,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     protected function getMockEvent()
     {
-        return m::mock('\Phergie\Irc\Plugin\React\Command\CommandEventInterface, \Phergie\Irc\Plugin\React\Command\CommandEventInterface');
+        return m::mock('\Phergie\Irc\Plugin\React\Command\CommandEventInterface');
     }
 
     /**
@@ -191,6 +183,6 @@ class PluginTest extends \PHPUnit_Framework_TestCase
      */
     protected function getMockQueue()
     {
-        return m::mock('\Phergie\Irc\Bot\React\EventQueueInterface, \Phergie\Irc\Bot\React\EventQueueInterface');
+        return m::mock('\Phergie\Irc\Bot\React\EventQueue', array('ircPrivmsg' => null));
     }
 }
