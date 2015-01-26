@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0adb4e1eee892b28cb1be02bc1e40ede",
+    "hash": "9fdc6383af6fb8eacab0596613effd41",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -285,16 +285,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "dev-master",
+            "version": "2.5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "2a9dd3cd00df52d2db1fbca61593ab65c9d54ef6"
+                "reference": "67c4701e0df65ce9f10e07959e6746365d959e23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2a9dd3cd00df52d2db1fbca61593ab65c9d54ef6",
-                "reference": "2a9dd3cd00df52d2db1fbca61593ab65c9d54ef6",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/67c4701e0df65ce9f10e07959e6746365d959e23",
+                "reference": "67c4701e0df65ce9f10e07959e6746365d959e23",
                 "shasum": ""
             },
             "require": {
@@ -314,7 +314,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
@@ -352,7 +352,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-01-24 13:41:39"
+            "time": "2015-01-24 13:44:03"
         },
         {
             "name": "doctrine/inflector",
@@ -1215,45 +1215,6 @@
         }
     ],
     "packages-dev": [
-        {
-            "name": "danrspencer/phpunit-expect-syntax",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/danrspencer/phpunit-expect-syntax.git",
-                "reference": "3a037816415f8d45b28f7f3ff4d5886d1db238b5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/danrspencer/phpunit-expect-syntax/zipball/3a037816415f8d45b28f7f3ff4d5886d1db238b5",
-                "reference": "3a037816415f8d45b28f7f3ff4d5886d1db238b5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dan Spencer",
-                    "email": "danrspen@gmail.com",
-                    "homepage": "https://github.com/danrspencer",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Expect syntax for PHPUnit assertions",
-            "homepage": "https://github.com/danrspencer/phpunit-expect-syntax",
-            "keywords": [
-                "expect",
-                "phpunit",
-                "testing"
-            ],
-            "time": "2014-11-11 11:37:36"
-        },
         {
             "name": "doctrine/instantiator",
             "version": "dev-master",
@@ -2341,7 +2302,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "vectorface/dunit": 20,
-        "danrspencer/phpunit-expect-syntax": 20,
         "phergie/phergie-irc-plugin-react-pong": 20,
         "phergie/phergie-irc-plugin-react-commandhelp": 20
     },

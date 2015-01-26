@@ -10,8 +10,6 @@
 
 namespace Chrismou\Phergie\Tests\Plugin\Php;
 
-require_once __DIR__ . '/../vendor/danrspencer/phpunit-expect-syntax/ExpectSyntax.php';
-
 use Phergie\Irc\Bot\React\EventQueueInterface as Queue;
 use Phergie\Irc\Plugin\React\Command\CommandEventInterface as Event;
 use Chrismou\Phergie\Plugin\Php\Plugin;
