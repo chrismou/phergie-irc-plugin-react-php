@@ -77,6 +77,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
         $function = $this->plugin->doFunctionLookup($testParam);
         $expectedLines = $this->plugin->getFoundFunctionLines($function);
+        $this->assertInternalType('array', $expectedLines);
 
         $this->eventMock->shouldReceive('getSource')
             ->andReturn($source)
@@ -103,6 +104,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
             ->andReturn("php");
 
         $expectedLines = $this->plugin->getUnknownFunctionLines();
+        $this->assertInternalType('array', $expectedLines);
 
         $this->eventMock->shouldReceive('getSource')
             ->andReturn($source)
@@ -122,6 +124,7 @@ class PluginTest extends \PHPUnit_Framework_TestCase
         $source = '#channel';
 
         $expectedLines = $plugin->getErrorLines();
+        $this->assertInternalType('array', $expectedLines);
 
         $this->eventMock->shouldReceive('getSource')
             ->andReturn($source)
@@ -142,8 +145,10 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleCommandHelp()
     {
-        $expectedLines = $this->plugin->getHelpLines();
         $source = '#channel';
+
+        $expectedLines = $this->plugin->getHelpLines();
+        $this->assertInternalType('array', $expectedLines);
 
         $this->eventMock->shouldReceive('getSource')
             ->andReturn($source)
