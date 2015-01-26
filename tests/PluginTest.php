@@ -140,7 +140,25 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 
     public function testHandleCommandWithInvalidParams()
     {
+        $source = '#channel';
 
+        $this->eventMock->shouldReceive('getCustomParams')
+            ->andReturn(array())
+            ->once();
+
+        $expectedLines = $this->plugin->getHelpLines();
+        $this->assertInternalType('array', $expectedLines);
+
+        $this->eventMock->shouldReceive('getSource')
+            ->andReturn($source)
+            ->times(count($expectedLines));
+
+        $this->plugin->handleCommand($this->eventMock, $this->queueMock);
+
+        foreach ($expectedLines as $expectedLine) {
+            $this->queueMock->shouldReceive('ircPrivmsg')
+                ->withArgs(array($source, $expectedLine));
+        }
     }
 
     public function testHandleCommandHelp()

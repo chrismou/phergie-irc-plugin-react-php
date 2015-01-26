@@ -20,7 +20,6 @@
         "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "~0.9",
         "vectorface/dunit": "dev-master",
-        "danrspencer/phpunit-expect-syntax": "dev-master",
         "phergie/phergie-irc-plugin-react-autojoin": "1.0.*",
         "phergie/phergie-irc-plugin-react-pong": "dev-master",
         "phergie/phergie-irc-plugin-react-commandhelp": "dev-master"
