@@ -25,6 +25,7 @@ use Psr\Log\LoggerAwareInterface;
  */
 class Plugin extends AbstractPlugin implements LoggerAwareInterface
 {
+    /** @var */
     protected $db;
 
     /**
@@ -38,20 +39,19 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
      */
     public function __construct(array $config = array())
     {
-        if (isset($config['dbpath'])) {
+        if (!isset($config['dbpath']) || !$config['dbpath']) {
+            $config['dbpath'] = __DIR__ . '/../data/phpdoc.db';
+        }
+
+        try {
             $connectionParams = array(
                 'driver' => 'pdo_sqlite',
                 'path' => $config['dbpath']
             );
-            try {
-                // Load the DB and attempt a connection to ensure it's valids
-                $this->db = DriverManager::getConnection($connectionParams, new \Doctrine\DBAL\Configuration());
-                $this->db->connect();
-            } catch (\Exception $e) {
-                // Handle failed connections - most likely the supplied config path was wrong
-                $this->db = null;
-                //$this->logger->debug('[PHP Plugin] ' . $e->getMessage());
-            }
+            $this->db = DriverManager::getConnection($connectionParams, new \Doctrine\DBAL\Configuration());
+            $this->db->connect();
+        } catch (\Exception $e) {
+            $this->db = null;
         }
     }
 

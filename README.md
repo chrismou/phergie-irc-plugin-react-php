@@ -24,13 +24,12 @@ See Phergie documentation for more information on
 ## Configuration
 
 ```php
-new \Chrismou\Phergie\Plugin\Php\Plugin(array(
-    'dbpath' => __DIR__.'/data/phpdoc.db'
-))
+new \Chrismou\Phergie\Plugin\Php\Plugin
 ```
 
-Or you can pass in a reference to your own sqlite DB. The included DB is generated using [phpdocs-to-db](https://github.com/chrismou/phpdocs-to-db)
-which is a work in progress - if you feel you can improve on it feel free to fork, improve and put in a pull request!
+Or you can use your own sqlite DB, by passing in something like array('dbpath'=>'path/to/your/db'). 
+The included DB is generated using [phpdocs-to-db](https://github.com/chrismou/phpdocs-to-db) which is a work in progress - if you feel you can 
+improve on it feel free to fork, improve and put in a pull request!
 
 ## Tests
 
