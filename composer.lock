@@ -4,8 +4,49 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9fdc6383af6fb8eacab0596613effd41",
+    "hash": "c150b8c8edde58be96cc5ae3fcd78bb9",
     "packages": [
+        {
+            "name": "chrismou/php-irc-text-formatting",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chrismou/php-irc-text-formatting.git",
+                "reference": "b96d03f6e555d277803c49623d3f6e3cc3303830"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chrismou/php-irc-text-formatting/zipball/b96d03f6e555d277803c49623d3f6e3cc3303830",
+                "reference": "b96d03f6e555d277803c49623d3f6e3cc3303830",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phake/phake": "2.0.0-beta4",
+                "phpunit/phpunit": "4.4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Chrismou\\Irc\\TextFormatting\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "description": "PHP library for adding color and styling to IRC text output",
+            "homepage": "https://github.com/chrismou/php-irc-text-formatting",
+            "keywords": [
+                "color",
+                "irc",
+                "library",
+                "style"
+            ],
+            "time": "2015-01-27 09:35:12"
+        },
         {
             "name": "doctrine/annotations",
             "version": "dev-master",
@@ -1706,12 +1747,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2047ae17f6e8cfd10fbde0b4535c97eb22d99cbe"
+                "reference": "2e8580deebb7d1ac92ac878595e6bffe01069c2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2047ae17f6e8cfd10fbde0b4535c97eb22d99cbe",
-                "reference": "2047ae17f6e8cfd10fbde0b4535c97eb22d99cbe",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2e8580deebb7d1ac92ac878595e6bffe01069c2a",
+                "reference": "2e8580deebb7d1ac92ac878595e6bffe01069c2a",
                 "shasum": ""
             },
             "require": {
@@ -1729,8 +1770,9 @@
                 "sebastian/comparator": "~1.0",
                 "sebastian/diff": "~1.1",
                 "sebastian/environment": "~1.1",
-                "sebastian/exporter": "~1.0",
+                "sebastian/exporter": "~1.1",
                 "sebastian/global-state": "~1.0",
+                "sebastian/recursion-context": "~1.0",
                 "sebastian/version": "~1.0",
                 "symfony/yaml": "~2.0"
             },
@@ -1769,7 +1811,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-01-24 14:23:56"
+            "time": "2015-01-27 16:06:15"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1998,12 +2040,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/exporter.git",
-                "reference": "35ab8d385eef068186c83e23ae83c96b0288b3ee"
+                "reference": "84839970d05254c73cde183a721c7af13aede943"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/35ab8d385eef068186c83e23ae83c96b0288b3ee",
-                "reference": "35ab8d385eef068186c83e23ae83c96b0288b3ee",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/84839970d05254c73cde183a721c7af13aede943",
+                "reference": "84839970d05254c73cde183a721c7af13aede943",
                 "shasum": ""
             },
             "require": {
@@ -2016,7 +2058,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
@@ -2056,7 +2098,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2015-01-24 09:57:24"
+            "time": "2015-01-27 07:23:06"
         },
         {
             "name": "sebastian/global-state",
@@ -2301,6 +2343,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "chrismou/php-irc-text-formatting": 20,
         "vectorface/dunit": 20,
         "phergie/phergie-irc-plugin-react-pong": 20,
         "phergie/phergie-irc-plugin-react-commandhelp": 20

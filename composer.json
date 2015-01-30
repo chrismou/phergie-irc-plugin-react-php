@@ -13,7 +13,9 @@
     "require": {
         "phergie/phergie-irc-bot-react": "~1",
         "phergie/phergie-irc-plugin-react-command": "~1.0",
-        "doctrine/dbal": "2.5.*"
+        "doctrine/dbal": "2.5.*",
+        "chrismou/php-irc-text-formatting": "dev-master"
+
 
     },
     "require-dev": {
