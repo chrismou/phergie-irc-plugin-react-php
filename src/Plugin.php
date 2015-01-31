@@ -148,9 +148,13 @@ class Plugin extends AbstractPlugin implements LoggerAwareInterface
      */
     public function getFoundFunctionLines($function)
     {
-        $response = array(sprintf(
-            '%s ( %s )',
-            $function['name'], $function['parameterString']));
+        $response = array(
+            sprintf(
+                '%s ( %s )',
+                $function['name'],
+                $function['parameterString']
+            )
+        );
         if ($function['description']) {
             $response[] = $function['description'];
         }
