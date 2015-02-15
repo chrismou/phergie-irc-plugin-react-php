@@ -3,7 +3,7 @@
  * Phergie plugin for PHP function lookups (https://github.com/chrismou/phergie-irc-plugin-react-php)
  *
  * @link https://github.com/chrismou/phergie-irc-plugin-react-php for the canonical source repository
- * @copyright Copyright (c) 2014 Chris Chrisostomou (http://mou.me)
+ * @copyright Copyright (c) 2015 Chris Chrisostomou (https://mou.me)
  * @license http://phergie.org/license New BSD License
  * @package Chrismou\Phergie\Plugin\Php
  */
