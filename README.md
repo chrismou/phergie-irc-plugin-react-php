@@ -10,12 +10,8 @@
 
 The recommended method of installation is [through composer](http://getcomposer.org).
 
-```JSON
-{
-    "require": {
-        "chrismou/phergie-irc-plugin-react-php": "dev-master"
-    }
-}
+```
+composer require chrismou/phergie-irc-plugin-react-php
 ```
 
 See Phergie documentation for more information on

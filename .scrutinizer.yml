@@ -1,5 +1,3 @@
-filter:
-    excluded_paths: [tests/*]
 tools:
     external_code_coverage: true
     php_sim: true
@@ -10,3 +8,6 @@ tools:
         enabled: true
         config:
             standard: PSR2
+filter:
+    excluded_paths:
+        - tests/*
