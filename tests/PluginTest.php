@@ -227,4 +227,18 @@ class PluginTest extends \PHPUnit_Framework_TestCase
     {
         return m::mock('\Phergie\Irc\Bot\React\EventQueue', array('ircPrivmsg' => null));
     }
+
+    /**
+     * Custom teardown to include mockery expectations as assertions
+     */
+    public function tearDown()
+    {
+        if ($container = \Mockery::getContainer()) {
+            $this->addToAssertionCount($container->mockery_getExpectationCount());
+        }
+
+        \Mockery::close();
+
+        parent::tearDown();
+    }
 }
