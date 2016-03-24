@@ -5,6 +5,7 @@
 [![Build Status](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/badges/build.png?b=master)](https://scrutinizer-ci.com/g/chrismou/phergie-irc-plugin-react-php/build-status/master)
 [![Test Coverage](https://codeclimate.com/github/chrismou/phergie-irc-plugin-react-php/badges/coverage.svg)](https://codeclimate.com/github/chrismou/phergie-irc-plugin-react-php/coverage)
 [![Code Climate](https://codeclimate.com/github/chrismou/phergie-irc-plugin-react-php/badges/gpa.svg)](https://codeclimate.com/github/chrismou/phergie-irc-plugin-react-php)
+[![Buy me a beer](https://img.shields.io/badge/donate-PayPal-019CDE.svg)](https://www.paypal.me/chrismou)
 
 ## Install
 
